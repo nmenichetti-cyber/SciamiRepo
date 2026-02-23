@@ -1,0 +1,30 @@
+# Build Sphinx
+source/build/
+/*.doctrees
+
+# Python
+__pycache__/
+*.pyc
+
+# Virtual environment
+venv/
+.env/
+
+# --- Compilazione C++ ---
+*.o
+*.so
+*.a
+*.exe
+
+# --- ROOT files generati ---
+*.root
+
+# --- Doxygen ---
+/xml/
+
+# --- Sphinx build ---
+/docs/_build/
+
+# --- Python ---
+*.pyc
+__pycache__/
