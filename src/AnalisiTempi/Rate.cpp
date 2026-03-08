@@ -9,6 +9,7 @@
 #include <TCanvas.h>
 #include <TTree.h>
 #include <TAxis.h>
+#include <TGraphErrors.h>
 
 #include "FlagClass.h"
 #include "Rate.h"
@@ -46,9 +47,15 @@ void rateGraph(TTree *t, double Dt){
 
     TelData rate;
 
+    TelData err_rate;
+
     TelData eff;
 
+    TelData err_eff;
+
     std::vector<double> timings;
+
+    std::vector<double> timings_err;
 
     //Elaborazione e  riempimento
 
@@ -69,13 +76,23 @@ void rateGraph(TTree *t, double Dt){
 
                 timings.push_back(total_time);
 
-                for (int i = 0; i < 3; i++){
+                timings_err.push_back(5./3600);
 
-                rate[i].push_back(triples[i]/Dt);
+                for (int i = 0; i < 3; i++){
 
                 if (doubles[i] != 0){
 
-                    eff[i].push_back((double)triples[i]/(double)doubles[i]);
+                    rate[i].push_back(triples[i]/Dt);
+
+                    err_rate[i].push_back(sqrt(triples[i])/Dt);
+
+                    double r = (double)triples[i]/(double)doubles[i];
+
+                    eff[i].push_back(r);
+
+                    err_eff[i].push_back(sqrt(r * (1-r)/(double)doubles[i]));
+
+
                 }
 
                     triples[i] *= 0;
@@ -102,11 +119,17 @@ void rateGraph(TTree *t, double Dt){
 
     }
 
+    
+
     //Grafici per i rate in funzione del tempo/efficienze
 
     for (size_t j = 0; j < rate.size(); j++) {
         // Grafico Rate vs tempo
-        TGraph* g = new TGraph(timings.size(), timings.data(), rate[j].data());
+
+        std::cout << "rate size = " << rate[j].size() << std::endl;
+        std::cout << "band = " << calculate_band(rate[j]) << std::endl;
+
+        TGraphErrors* g = new TGraphErrors(timings.size(), timings.data(), rate[j].data(), timings_err.data(), err_rate[j].data());
         g->SetMarkerStyle(21);
         g->SetMarkerColor(kRed);
         g->SetLineColor(kBlack);
@@ -119,8 +142,8 @@ void rateGraph(TTree *t, double Dt){
         g->Draw("AP");
         c->Update();
 
-        // Grafico Efficienza vs tempo (se vuoi tutti identici, puoi fare anche qui un loop)
-        TGraph* g_e = new TGraph(timings.size(), timings.data(), eff[j].data());
+        // Grafico Efficienza vs tempo 
+        TGraphErrors* g_e = new TGraphErrors(timings.size(), timings.data(), eff[j].data(), timings_err.data(), err_eff[j].data());
         g_e->SetMarkerStyle(21);
         g_e->SetMarkerColor(kBlue); // cambia colore per distinguere
         g_e->SetLineColor(kBlack);
@@ -131,5 +154,35 @@ void rateGraph(TTree *t, double Dt){
         TCanvas* c_e = new TCanvas(Form("c_e_%zu", j), Form("Canvas_e_%zu", j), 800, 600);
         g_e->Draw("AP");
         c_e->Update();
+
     }
+
+}
+
+double calculate_band(const std::vector<double>& v) {
+
+    ULong64_t N = v.size();
+
+    double sum = 0;
+
+    for (ULong64_t k = 0; k < N; k++){
+
+        sum += v[k];
+
+    }
+
+    double avg = sum /N;
+
+    std::vector<double> diff;
+
+    for (ULong64_t l = 0; l < N; l++){
+
+        diff.push_back(std::abs(v[l]-avg));
+
+    }
+
+    auto bandwidth = std::max_element(diff.begin(), diff.end());
+
+    return *bandwidth;
+
 }

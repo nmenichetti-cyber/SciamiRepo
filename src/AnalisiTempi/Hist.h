@@ -41,6 +41,9 @@ struct BoolTrio {
 
 };
 
+void histFit(TH1F *h);
+
 void histGraph(TTree *t);
+
 
 #endif

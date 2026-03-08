@@ -9,10 +9,26 @@
 #include <TCanvas.h>
 #include <TH1F.h>
 #include <TAxis.h>
+#include <TF1.h>
 #include <TTree.h>
 
 #include "FlagClass.h"
 #include "Hist.h"
+
+void histFit(TH1F *h) {
+
+    TF1 *f = new TF1("f", "[0] * exp(-[1]*x) + [2]", 0, 4);
+
+    f->SetParameters(1e3, 5, 0);
+
+    h->Fit("f", "ILS");
+    
+    TCanvas *C = new TCanvas();
+    h->Draw();
+    C->Update();
+
+
+}
 
 void histGraph(TTree *t){
 
@@ -34,11 +50,11 @@ void histGraph(TTree *t){
 
     //Trio di istogrammi
 
-    TH1F *h_08 = new TH1F("Setup 08", "Tempi fra eventi successivi, setup08", 100, 0, 4e-6);
+    TH1F *h_08 = new TH1F("Setup 08", "Tempi fra eventi successivi, setup08", 100, 0, 4);
 
-    TH1F *h_06 = new TH1F("Setup 06", "Tempi fra eventi successivi, setup06", 100, 0, 4e-6);
+    TH1F *h_06 = new TH1F("Setup 06", "Tempi fra eventi successivi, setup06", 100, 0, 4);
 
-    TH1F *h_04 = new TH1F("Setup 04", "Tempi fra eventi successivi, setup04", 100, 0, 4e-6);
+    TH1F *h_04 = new TH1F("Setup 04", "Tempi fra eventi successivi, setup04", 100, 0, 4);
 
     //Loop sugli eventi
 
@@ -83,21 +99,12 @@ void histGraph(TTree *t){
 
             if (FirstMask.check_third(SecondMask)) {h_04->Fill(c*(t_2-t_1));}
 
-            k = h-1;
-
             }
     }
 
-    TCanvas *C_08 = new TCanvas();
-    h_08->Draw();
-    C_08->Update();
-
-    TCanvas *C_06 = new TCanvas();
-    h_06->Draw();
-    C_06->Update();
-
-    TCanvas *C_04 = new TCanvas();
-    h_04->Draw();
-    C_04->Update();
+    histFit(h_08);
+    histFit(h_06);
+    histFit(h_04);
 
 }
+

@@ -27,4 +27,6 @@ struct TelData{
 
 void rateGraph(TTree *t, double Dt);
 
+double calculate_band(const std::vector<double>& v);
+
 #endif
