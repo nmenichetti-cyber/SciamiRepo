@@ -18,10 +18,10 @@ using namespace std;
 
 // Versione con controllo più elegante usando una funzione di supporto
 bool isEventoValido(unsigned int ev) {
-    return (ev == 1 || ev == 16 || ev == 256 || ev == 3 || ev == 5 || ev == 9 || ev == 48 || ev == 80 || ev == 144 || ev == 9 || ev == 768 || ev == 1280 || ev == 2304);
+    return (ev == 1 || ev == 16 || ev == 256 || ev == 3 || ev == 5 || ev == 9 || ev == 48 || ev == 80 || ev == 144 || ev == 9 || ev == 768 || ev == 1280 || ev == 2304 || ev == 112 || ev == 240 );
 }
 
-void ratetriple(const char* filename = "Fiforead_example.txt") {
+void ratetriple(const char* filename = "Fiforead_example.txt") { // Funzione principale
     
     ifstream file(filename);
     if (!file.is_open()) {
@@ -45,11 +45,10 @@ void ratetriple(const char* filename = "Fiforead_example.txt") {
         if (!primoResetTrovato && second == cl) {
             primoResetTrovato = true;
             cout << "Primo reset trovato alla riga con Ts = " << second << endl;
-            // Non aggiungiamo questo reset? Dipende se vuoi includerlo o no
             // Se vuoi includere anche il reset, decommenta le prossime 2 righe:
             V_Ev.push_back(first);
             V_Ts.push_back(second);
-            continue;   //Skip this line? Dipende se vuoi includere il reset
+            continue;   
         }
         
         // Se abbiamo già trovato il primo reset, aggiungi tutti gli eventi
@@ -77,7 +76,7 @@ void ratetriple(const char* filename = "Fiforead_example.txt") {
     vector<double> RH;
     vector<double> TSH;
     int BUF[1] = {0};
-    int Rb = 0;  
+    int Rb = 0;   
     int rt = 0;
     vector<double> RH_err;
     vector<double> TSH_err(TSH.size(), 0.0);
@@ -85,9 +84,9 @@ void ratetriple(const char* filename = "Fiforead_example.txt") {
     int difference = 0;
     vector<double> V_Rt_Ts_abs;  // timestamp assoluti delle triple
 
-    for(int j = 0; j < (int)V_Ts.size(); j++){ 
-        if(V_Ts[j] != cl){
-            if(isEventoValido(V_Ev[j])){
+    for(int j = 0; j < (int)V_Ts.size(); j++){  // scorre sul vettore dei timestamp
+        if(V_Ts[j] != cl){    // controlla che il numero trovato non sia un reset
+            if(isEventoValido(V_Ev[j])){     // se trova una tripla o una combinazione di una doppia con la tripla corrispondente inizia a controllare se c'è un altro evento simile per poter segnare eventuale sciame              
                 for(int i = j+1; i < (int)V_Ts.size(); i++){
                     if(V_Ts[i] == cl){
                         rt=0;
@@ -99,10 +98,13 @@ void ratetriple(const char* filename = "Fiforead_example.txt") {
                             if(rt == 2){
                                 Rt++;
                                 rt = 0;
-                                double ts_abs = (double)V_Ts[i] + (double)Rs * 2147483648.0;
-                                V_Rt_Ts_abs.push_back(ts_abs);
-                                if( BUF[0] == 16 || BUF[0] == 48 || BUF[0] == 80 || BUF[0] == 144){
-                                triplasecondopmt++;            
+                                //double ts_abs = (double)V_Ts[i] + (double)Rs * 2147483648.0;
+                                //V_Rt_Ts_abs.push_back(ts_abs);
+                                if( BUF[0] == 16 || BUF[0] == 48 || BUF[0] == 80 || BUF[0] == 144 || BUF[0] == 112 || BUF[0] == 240){
+                                triplasecondopmt++;           
+                                }
+                                else{
+                                    Rt = Rt - 1; 
                                 }
                                 BUF[0]=0;
                                 j=i;
@@ -136,7 +138,7 @@ void ratetriple(const char* filename = "Fiforead_example.txt") {
 
     difference = Rt -triplasecondopmt;
 
-    long double Ts = Rs * 5.3687091;  // secondi?
+    long double Ts = Rs * 5.3687091;  // secondi totali passati
     cout << "Rs: " << Rs << ", Rt: " << Rt << endl;
     cout << "Ts: " << Ts << " s, Th: " << Ts/3600 << " h" << endl;
     long double RT = ((Rt)/Ts)*1000;
@@ -160,40 +162,40 @@ void ratetriple(const char* filename = "Fiforead_example.txt") {
         cout << "Nessun dato da plottare!" << endl;
     }
 
-    if(V_Rt_Ts_abs.size() > 1){
-    vector<double> deltaT_s;
+//     if(V_Rt_Ts_abs.size() > 1){
+//     vector<double> deltaT_s;
     
-    // Ogni tick vale Ts_totale / (Rs_totale * 2^31)
-    // oppure direttamente: 1 tick = 5.3687091 s / 2^31
-    double tick_to_sec = 5.3687091 / 2147483648.0;
+//     // Ogni tick vale Ts_totale / (Rs_totale * 2^31)
+//     // oppure direttamente: 1 tick = 5.3687091 s / 2^31
+//     double tick_to_sec = 5.3687091 / 2147483648.0;
     
-    for(int k = 1; k < (int)V_Rt_Ts_abs.size(); k++){
-        double diff_ticks = V_Rt_Ts_abs[k] - V_Rt_Ts_abs[k-1];
-        double diff_sec   = diff_ticks * tick_to_sec;
-        if(diff_sec > 0)
-            deltaT_s.push_back(diff_sec);
-    }
+//     for(int k = 1; k < (int)V_Rt_Ts_abs.size(); k++){
+//         double diff_ticks = V_Rt_Ts_abs[k] - V_Rt_Ts_abs[k-1];
+//         double diff_sec   = diff_ticks * tick_to_sec;
+//         if(diff_sec > 0)
+//             deltaT_s.push_back(diff_sec);
+//     }
 
-    double maxDelta = *max_element(deltaT_s.begin(), deltaT_s.end());
+//     double maxDelta = *max_element(deltaT_s.begin(), deltaT_s.end());
 
-    TCanvas *c2 = new TCanvas("c2", "Delta T triple", 800, 600);
-    c2->SetGrid();
-    c2->SetLogy();
+//     TCanvas *c2 = new TCanvas("c2", "Delta T triple", 800, 600);
+//     c2->SetGrid();
+//     c2->SetLogy();
 
-    TH1F *hDeltaT = new TH1F("hDeltaT",
-                              "#Delta T tra coincidenze triple;#Delta T (s);Conteggi",
-                              200, 0, maxDelta);
+//     TH1F *hDeltaT = new TH1F("hDeltaT",
+//                               "#Delta T tra coincidenze triple;#Delta T (s);Conteggi",
+//                               200, 0, maxDelta);
 
-    for(double dt : deltaT_s)
-        hDeltaT->Fill(dt);
+//     for(double dt : deltaT_s)
+//         hDeltaT->Fill(dt);
 
-    hDeltaT->SetFillColor(kCyan-9);
-    hDeltaT->SetLineColor(kBlue+1);
-    hDeltaT->Draw("HIST");
+//     hDeltaT->SetFillColor(kCyan-9);
+//     hDeltaT->SetLineColor(kBlue+1);
+//     hDeltaT->Draw("HIST");
 
-    c2->SaveAs("deltaT_triple.png");
-    c2->Draw();
+//     c2->SaveAs("deltaT_triple.png");
+//     c2->Draw();
+// }
 }
-}
 
-// da riportare incertezza e cambiare da mHz a conteggi orari
+// da riportare incertezza e cambiare da mHz a conteggi orari (Fatto)

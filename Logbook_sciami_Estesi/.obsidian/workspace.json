@@ -8,17 +8,17 @@
         "type": "tabs",
         "children": [
           {
-            "id": "f0fbe64f808a4177",
+            "id": "ee4cdbdc0e50776c",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "SESSIONI/12.SESSIONE 18-03-2026.md",
+                "file": "SESSIONI/13.SESSIONE 19-03-2026.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "12.SESSIONE 18-03-2026"
+              "title": "13.SESSIONE 19-03-2026"
             }
           }
         ]
@@ -183,23 +183,24 @@
       "bases:Crea nuova Base": false
     }
   },
-  "active": "f0fbe64f808a4177",
+  "active": "ee4cdbdc0e50776c",
   "lastOpenFiles": [
+    "SESSIONI/12.SESSIONE 18-03-2026.md",
+    "SESSIONI/11.SESSIONE 17-03-2026.md",
+    "SESSIONI/10.SESSIONE 12-03-2026.md",
+    "SESSIONI/13.SESSIONE 19-03-2026.md",
+    "SESSIONI/8.SESSIONE 10-03-2026.md",
+    "SESSIONI/6.SESSIONE 04-03-2026.md",
+    "SESSIONI/5.SESSIONE 03-03-2026.md",
+    "SESSIONI/7.SESSIONE 05-03-2026.md",
+    "SESSIONI/4.SESSIONE 26-02-2026.md",
+    "SESSIONI/9.SESSIONE 11-03-2026.md",
     "SESSIONI/3.SESSIONE 25-02-2026.md",
     "SESSIONI/2.SESSIONE 24-02-2026.md",
     "SESSIONI/1.SESSIONE 19-02-2026.md",
-    "SESSIONI/6.SESSIONE 04-03-2026.md",
-    "SESSIONI/7.SESSIONE 05-03-2026.md",
-    "SESSIONI/8.SESSIONE 10-03-2026.md",
-    "SESSIONI/9.SESSIONE 11-03-2026.md",
-    "SESSIONI/10.SESSIONE 12-03-2026.md",
-    "SESSIONI/11.SESSIONE 17-03-2026.md",
     "Immagini/Modello.sciami.jpeg",
-    "SESSIONI/12.SESSIONE 18-03-2026.md",
     "Immagini/ Calcoli distanze tra telescopi e accettanze.pdf",
     "Immagini/Accettanze,per lab (1).pdf",
-    "SESSIONI/4.SESSIONE 26-02-2026.md",
-    "SESSIONI/5.SESSIONE 03-03-2026.md",
     "Immagini/Calcoli distanze tra telescopi e accettanze.pdf",
     "SESSIONI/Copia di Accettanze,per lab.pdf",
     "Immagini",
