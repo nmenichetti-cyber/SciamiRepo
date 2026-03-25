@@ -28,7 +28,7 @@
 //    root -l 'DRS4Browser_v3.cpp("file.xml")'
 //    root -l 'DRS4Browser_v3.cpp("file.xml", "CHN1=PMT top,CHN2=PMT mid,CHN3=PMT bot,CHN4=NIM trigger")'
 //
-//  Autori: Luca & Claude — Laboratorio Sciami Estesi, Marzo 2026
+// 
 ///////////////////////////////////////////////////////////////////////////////
 
 
@@ -102,7 +102,7 @@ const int MIN_CLIP_SAMPLES = 2;   // Numero minimo di campioni consecutivi a CLI
                                   // un singolo campione rumoroso).
 
 // --- Parametri soglia fissa + correzione walk (metodo B: segnali clippati) ---
-const double FIXED_THRESHOLD = -100.0; // Soglia fissa assoluta [mV].
+const double FIXED_THRESHOLD = -150.0; // Soglia fissa assoluta [mV].S
                                       // Deve essere sopra il rumore e sotto il clipping.
                                       // Con baseline ~0 mV e rumore ~1 mV, -30 mV è
                                       // ben nel fronte di salita per impulsi > 30 mV.
