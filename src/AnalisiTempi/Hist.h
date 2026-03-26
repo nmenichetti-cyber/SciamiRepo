@@ -16,7 +16,7 @@
 
 
 
-void histFit(TH1F *h, std::string fname);
+void histFit(TH1F *h, const std::string &fname);
 
 void histMain(TTree *t, int n_ch);
 

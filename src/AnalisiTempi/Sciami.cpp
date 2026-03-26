@@ -69,7 +69,7 @@ void Sciami(const char * path, const char* kw){
     TTree *t = (TTree*)f->Get("T");
 
     //Stringa di scelta
-    if (strcmp(kw, "rate") == 0) {rateMain(t, 12, 100);}
+    if (strcmp(kw, "rate") == 0) {rateMain(t, 12, 1200);}
 
     if (strcmp(kw, "hist") == 0) {histMain(t, 12);}
 
